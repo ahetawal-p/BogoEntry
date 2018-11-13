@@ -4,7 +4,6 @@ import logger from 'morgan';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 
-import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 
 const app = express();
@@ -17,8 +16,19 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-const staticFiles = express.static(path.join(__dirname, '../../client/build'))
+const staticFiles = express.static(path.join(__dirname, '../../client/build'));
 app.use(staticFiles);
+
+const router = express.Router();
+router.get('/cities', (req, res) => {
+  const cities = [
+    { name: 'New York City', population: 8175133 },
+    { name: 'Los Angeles', population: 3792621 },
+    { name: 'Chicago', population: 2695598 }];
+  res.json(cities);
+});
+
+app.use(router);
 
 app.use('/*', staticFiles);
 app.use('/users', usersRouter);
