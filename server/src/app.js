@@ -8,10 +8,6 @@ import usersRouter from './routes/users';
 
 const app = express();
 
-// view engine setup
-// app.set('views', path.join(__dirname, '../../views'));
-// app.set('view engine', 'ejs');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -49,9 +45,6 @@ app.use((err, req, res) => {
   res.render('error');
 });
 
-// // Index route
-// app.get('/', (req, res) => {
-//   res.send('Invalid endpoint!');
-// });
 
-app.listen(process.env.PORT || 3001, () => console.log('Listening to port 3001'));
+// eslint-disable-next-line no-console
+app.listen(process.env.PORT || 3001, () => console.log(`Listening to port ${process.env.PORT || 3001}`));
