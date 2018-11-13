@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prestart": "npm run build",
     "clean": "rimraf build",
     "build-babel": "mkdir -p build && babel -d ./build ./src -s",
     "build": "npm run clean && npm run build-babel",
@@ -18,10 +17,7 @@
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
-    "babel-cli": "^6.26.0"
-  },
-  "devDependencies": {
-    
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^10.0.1",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.9.0",
