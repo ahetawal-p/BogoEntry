@@ -11,7 +11,7 @@
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
       "restart": true,
       "args": [
-        "${workspaceFolder}/src/app.js",
+        "${workspaceFolder}/server/src/app.js",
         "--exec",
         "babel-node",
       ],
@@ -22,7 +22,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch PROD",
-      "program": "${workspaceFolder}/build/app.js"
+      "program": "${workspaceFolder}/server/build/app.js"
     }
   ]
 }

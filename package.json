@@ -1,33 +1,16 @@
 {
-  "name": "bogoentry",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "prestart": "npm run build",
-    "clean": "rimraf dist",
-    "build-babel": "mkdir -p build && babel -d ./build ./src -s",
-    "build": "npm run clean && npm run build-babel",
-    "start": "node ./build/app.js",
-    "dev": "nodemon ./src/app.js --exec babel-node",
-    "lint": "eslint ./src"
-  },
+  "name": "crae-simple",
+  "version": "1.0.0",
+  "repository": {},
   "dependencies": {
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
-    "ejs": "~2.5.7",
-    "express": "~4.16.0",
-    "http-errors": "~1.6.2",
-    "morgan": "~1.9.0"
+    "concurrently": "^3.1.0",
+    "rimraf": "^2.5.4"
   },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^10.0.1",
-    "babel-preset-env": "^1.7.0",
-    "eslint": "^5.9.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-babel": "^5.2.1",
-    "eslint-plugin-import": "^2.14.0",
-    "nodemon": "^1.18.6",
-    "rimraf": "^2.6.2"
+  "scripts": {
+    "clean": "concurrently \"rimraf node_modules\" \"cd client && rimraf node_modules build\" \"cd server && rimraf node_modules build\"",
+    "install": "(cd client && npm install) && (cd server && npm install)",
+    "heroku-postbuild": "cd client && npm run build",
+    "start": "concurrently \"cd client && PORT=3000 npm start\" \"cd server && PORT=3001 npm run dev\"",
+    "start:prod": "cd server && npm start"
   }
 }
