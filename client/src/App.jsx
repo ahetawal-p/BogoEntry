@@ -7,7 +7,7 @@ import { RegisterPage } from './components';
 class App extends Component {
   render() {
     return (
-      <div className="jumbotron">
+      <div className="jumbotron" style={{ height: '100vh' }}>
         <div className="container">
           <Router history={history}>
             <div>
