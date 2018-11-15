@@ -1,29 +1,20 @@
 import React, { Component } from 'react';
-import './App.css';
+import { Router, Route } from 'react-router-dom';
+import { history } from './helpers';
+import { RegisterPage } from './components';
 
+// eslint-disable-next-line react/prefer-stateless-function
 class App extends Component {
-  state = { cities: [] };
-
-  async componentDidMount() {
-    const response = await fetch('/cities');
-    const cities = await response.json();
-
-    this.setState({ cities });
-  }
-
   render() {
-    const { cities } = this.state;
     return (
-      <div>
-        <ul>
-          {cities.map(city => (
-            <li key={city.name}>
-              {' '}
-              <b>{city.name}</b>
-              {city.population}
-            </li>
-          ))}
-        </ul>
+      <div className="jumbotron">
+        <div className="container">
+          <Router history={history}>
+            <div>
+              <Route path="/" component={RegisterPage} />
+            </div>
+          </Router>
+        </div>
       </div>
     );
   }
