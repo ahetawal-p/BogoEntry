@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { history } from './helpers';
-import { RegisterPage } from './components';
+import { RegisterView } from './components/Register';
+import { LoginView } from './components/Login';
+import { EventEntryView } from './components/EventEntry';
+import PrivateRoute from './utils/PrivateRoute';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class App extends Component {
@@ -11,7 +14,9 @@ class App extends Component {
         <div className="container">
           <Router history={history}>
             <div>
-              <Route path="/" component={RegisterPage} />
+              <PrivateRoute exact path="/" component={EventEntryView} />
+              <Route path="/register" component={RegisterView} />
+              <Route path="/login" component={LoginView} />
             </div>
           </Router>
         </div>
