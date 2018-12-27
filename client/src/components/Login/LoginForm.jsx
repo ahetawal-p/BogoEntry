@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const validate = values => {
   const errors = {};
   if (!values.password) {
-    errors.username = 'Required';
+    errors.password = 'Required';
   }
   if (!values.email) {
     errors.email = 'Required';
@@ -18,12 +18,20 @@ const validate = values => {
 };
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
-  <div>
+  <div className="form-group">
     <label htmlFor={label}>{label}</label>
-    <div>
-      <input {...input} placeholder={label} type={type} />
-      {touched && (error && <span>{error}</span>)}
-    </div>
+    <input
+      {...input}
+      className={`form-control${touched && error ? ' is-invalid' : ''}`}
+      placeholder={label}
+      type={type}
+    />
+    {touched &&
+      (error && (
+        <div className="col-sm-0">
+          <small className="text-danger">{error}</small>
+        </div>
+      ))}
   </div>
 );
 
@@ -38,12 +46,9 @@ const LoginForm = props => {
         component={renderField}
         label="Password"
       />
-      <div>
-        <button type="submit" disabled={submitting}>
+      <div className="form-group">
+        <button className="btn btn-primary" type="submit" disabled={submitting}>
           Submit
-        </button>
-        <button type="button" disabled={pristine || submitting} onClick={reset}>
-          Clear Values
         </button>
         <Link to="/register" className="btn btn-link">
           Register
