@@ -4,13 +4,12 @@
 import React from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import STATE from '../../utils/state';
 
 const validate = values => {
   const errors = {};
-  if (!values.password) {
-    errors.password = 'Required';
+  if (!values.title) {
+    errors.title = 'Required';
   }
   if (!values.state) {
     errors.state = 'Required';
@@ -18,33 +17,100 @@ const validate = values => {
   if (!values.city) {
     errors.city = 'Required';
   }
-  if (!values.email) {
-    errors.email = 'Required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address';
+  if (!values.description) {
+    errors.description = 'Required';
+  }
+  if (!values.address) {
+    errors.address = 'Required';
+  }
+  if (values.city && values.city === 'other' && !values.otherCity) {
+    errors.otherCity = 'Required';
   }
   return errors;
 };
 
-const renderField = ({ input, label, type, meta: { touched, error } }) => (
-  <div>
-    <label htmlFor={label}>{label}</label>
-    <div>
-      <input {...input} placeholder={label} type={type} />
-      {touched && (error && <span>{error}</span>)}
-    </div>
+const renderCommon = (
+  input,
+  label,
+  type,
+  required,
+  touched,
+  error,
+  children,
+  componentType
+) => (
+  <div className="form-group">
+    <label htmlFor={label}>{required ? `* ${label}` : `${label}`}</label>
+    {componentType === 'input' && (
+      <input
+        {...input}
+        pattern={type === 'tel' ? '[0-9]{3}-[0-9]{3}-[0-9]{4}' : undefined}
+        className={`form-control${touched && error ? ' is-invalid' : ''}`}
+        placeholder={label}
+        type={type}
+      />
+    )}
+    {componentType === 'select' && (
+      <select
+        {...input}
+        className={`form-control${touched && error ? ' is-invalid' : ''}`}
+      >
+        {children}
+      </select>
+    )}
+    {componentType === 'textarea' && (
+      <textarea
+        rows="3"
+        cols="20"
+        {...input}
+        className={`form-control${touched && error ? ' is-invalid' : ''}`}
+        placeholder={label}
+      />
+    )}
+    {touched &&
+      (error && (
+        <div className="col-sm-0">
+          <small className="text-danger">{error}</small>
+        </div>
+      ))}
   </div>
 );
 
-const renderSelect = ({ input, label, meta: { touched, error }, children }) => (
-  <div>
-    <label htmlFor={label}>{label}</label>
-    <div>
-      <select {...input}>{children}</select>
-      {touched && (error && <p className="help is-danger">{error}</p>)}
-    </div>
-  </div>
-);
+const renderField = ({
+  input,
+  label,
+  type,
+  required,
+  meta: { touched, error }
+}) => renderCommon(input, label, type, required, touched, error, null, 'input');
+
+const renderTextArea = ({
+  input,
+  label,
+  type,
+  required,
+  meta: { touched, error }
+}) =>
+  renderCommon(input, label, type, required, touched, error, null, 'textarea');
+
+const renderSelect = ({
+  input,
+  label,
+  type,
+  required,
+  meta: { touched, error },
+  children
+}) =>
+  renderCommon(
+    input,
+    label,
+    type,
+    required,
+    touched,
+    error,
+    children,
+    'select'
+  );
 
 let EventEntryForm = props => {
   const {
@@ -53,43 +119,134 @@ let EventEntryForm = props => {
     reset,
     submitting,
     stateValue,
-    cityValue
+    cityValue,
+    hasOtherCityName
   } = props;
   return (
     <form onSubmit={handleSubmit}>
-      <Field name="email" type="email" component={renderField} label="Email" />
       <Field
-        name="password"
-        type="password"
+        name="title"
+        type="text"
         component={renderField}
-        label="Password"
+        label="Title"
+        required
       />
-      <Field name="state" component={renderSelect} label="State">
-        <option value="">Select a state...</option>
-        {stateValue.map(stateOption => (
-          <option value={stateOption} key={stateOption}>
-            {stateOption}
-          </option>
-        ))}
-      </Field>
-      <Field name="city" component={renderSelect} label="City">
-        <option value="">Select a city...</option>
-        {cityValue.map(cityOption => (
-          <option value={cityOption} key={cityOption}>
-            {cityOption}
-          </option>
-        ))}
-      </Field>
-      <div>
-        <button type="submit" disabled={submitting}>
-          Submit
-        </button>
-        <button type="button" disabled={pristine || submitting} onClick={reset}>
-          Clear Values
-        </button>
-        <Link to="/register" className="btn btn-link">
-          Register
-        </Link>
+      <div className="form-row">
+        <div className="col-md-4">
+          <Field name="state" component={renderSelect} label="State" required>
+            <option value="">Select a state...</option>
+            {stateValue.map(stateOption => (
+              <option value={stateOption} key={stateOption}>
+                {stateOption}
+              </option>
+            ))}
+          </Field>
+        </div>
+        <div className="col-md-4">
+          <Field name="city" component={renderSelect} label="City" required>
+            <option value="">Select a city...</option>
+            {cityValue.map(cityOption => (
+              <option value={cityOption} key={cityOption}>
+                {cityOption}
+              </option>
+            ))}
+          </Field>
+        </div>
+        {hasOtherCityName && (
+          <div className="col-md-4">
+            <Field
+              name="otherCity"
+              type="text"
+              component={renderField}
+              label="City Name"
+              required
+            />
+          </div>
+        )}
+        <div className="col-md-4">
+          <Field
+            name="zip"
+            type="text"
+            component={renderField}
+            label="Zip"
+            required
+          />
+        </div>
+      </div>
+      <Field
+        name="category"
+        type="text"
+        component={renderField}
+        label="Category"
+      />
+      <Field
+        name="activity"
+        type="text"
+        component={renderField}
+        label="Activity"
+        required
+      />
+      <Field
+        name="address"
+        type="text"
+        component={renderTextArea}
+        label="Address"
+        required
+      />
+      <div className="form-row">
+        <div className="col-md-4">
+          <Field
+            name="phone"
+            type="tel"
+            component={renderField}
+            label="Phone No."
+          />
+        </div>
+        <div className="col-md-4">
+          <Field
+            name="email"
+            type="email"
+            component={renderField}
+            label="Email"
+          />
+        </div>
+        <div className="col-md-4">
+          <Field
+            name="website"
+            type="url"
+            component={renderField}
+            label="Website"
+          />
+        </div>
+      </div>
+      <Field
+        name="description"
+        type="text"
+        component={renderTextArea}
+        label="Description"
+        required
+      />
+
+      <div className="form-row">
+        <div className="form-group col-md-4">
+          <button
+            className="btn btn-outline-primary"
+            type="submit"
+            disabled={submitting}
+          >
+            Submit
+          </button>
+        </div>
+        <div className="form-group col-md-4">
+          <button
+            className="btn btn-outline-secondary"
+            type="button"
+            disabled={pristine || submitting}
+            onClick={reset}
+          >
+            Clear Values
+          </button>
+        </div>
       </div>
     </form>
   );
@@ -106,13 +263,15 @@ EventEntryForm = connect(state => {
   // can select values individually
   const stateValue = selector(state, 'state');
   let cityValue = [];
-  if (!stateValue) {
-    cityValue = [];
-  } else {
-    cityValue = STATE[stateValue];
+  if (stateValue) {
+    cityValue = [...STATE[stateValue], 'other'];
+  }
+  let hasOtherCityName = false;
+  if (selector(state, 'city') === 'other') {
+    hasOtherCityName = true;
   }
 
-  return { stateValue: Object.keys(STATE), cityValue };
+  return { stateValue: Object.keys(STATE), cityValue, hasOtherCityName };
 })(EventEntryForm);
 
 export default EventEntryForm;

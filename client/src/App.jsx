@@ -6,6 +6,7 @@ import { history } from './helpers';
 import { RegisterView } from './components/Register';
 import { LoginView } from './components/Login';
 import { EventEntryView } from './components/EventEntry';
+import { AdminView } from './components/Admin';
 import PrivateRoute from './utils/PrivateRoute';
 import * as alertActions from './actions/AlertAction';
 
@@ -24,9 +25,9 @@ class App extends Component {
   render() {
     const { alert } = this.props;
     return (
-      <div className="jumbotron" style={{ height: '100vh' }}>
+      <div className="jumbotron" style={{ marginBottom: 0 }}>
         <div className="container">
-          <div className="col-sm-8 col-sm-offset-2">
+          <div className="col-md-8">
             {alert.message && (
               <div className={`alert ${alert.type}`}>{alert.message}</div>
             )}
@@ -35,6 +36,12 @@ class App extends Component {
                 <PrivateRoute exact path="/" component={EventEntryView} />
                 <Route path="/register" component={RegisterView} />
                 <Route path="/login" component={LoginView} />
+                <PrivateRoute
+                  exact
+                  path="/admin"
+                  component={AdminView}
+                  isAdmin
+                />
               </div>
             </Router>
           </div>
