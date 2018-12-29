@@ -1,50 +1,80 @@
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-console */
+/* eslint-disable comma-dangle */
 import createError from 'http-errors';
 import express from 'express';
 import logger from 'morgan';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-
+import mongoose from 'mongoose';
 import usersRouter from './routes/users';
+import Authentication from './auth/authentication';
 
-const app = express();
+mongoose.Promise = global.Promise;
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-const staticFiles = express.static(path.join(__dirname, '../../client/build'));
-app.use(staticFiles);
+export default class App {
+  constructor(config) {
+    this.port = config.port;
+    this.db = config.db;
+    this.express = express();
+    this.auth = new Authentication();
+    this.initialize();
+  }
 
-const router = express.Router();
-router.get('/cities', (req, res) => {
-  const cities = [
-    { name: 'New York City', population: 8175133 },
-    { name: 'Los Angeles', population: 3792621 },
-    { name: 'Chicago', population: 2695598 }];
-  res.json(cities);
-});
+  initialize() {
+    mongoose.connect(
+      this.db,
+      { useNewUrlParser: true, useCreateIndex: true }
+    );
+    mongoose.connection.on('error', error => console.log(error));
+    mongoose.set('debug', true);
 
-app.use(router);
+    this.auth.initialize();
+    this.configureMiddleware();
+    this.configureRoutes();
+  }
 
-app.use('/*', staticFiles);
-app.use('/users', usersRouter);
+  start() {
+    this.express.listen(this.port, () =>
+      console.log(`Listening to port ${this.port}`)
+    );
+  }
 
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next(createError(404));
-});
+  configureMiddleware() {
+    const expressApp = this.express;
+    expressApp.use(logger('dev'));
+    expressApp.use(express.json());
+    expressApp.use(express.urlencoded({ extended: false }));
+    expressApp.use(cookieParser());
+    const staticFiles = express.static(
+      path.join(__dirname, '../../client/build')
+    );
+    expressApp.use(staticFiles);
+  }
 
-// error handler
-app.use((err, req, res) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  configureRoutes() {
+    const expressApp = this.express;
+    // const staticFiles = express.static(
+    //   path.join(__dirname, '../../client/build')
+    // );
+    // expressApp.use('/*', staticFiles);
+    expressApp.use('/user', usersRouter);
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+    // catch 404 and forward to error handler
+    expressApp.use((req, res, next) => {
+      next(createError(404));
+    });
 
+    // error handler
+    expressApp.use((err, req, res) => {
+      // set locals, only providing error in development
+      res.locals.message = err.message;
+      res.locals.error = req.app.get('env') === 'development' ? {} : {};
 
-// eslint-disable-next-line no-console
-app.listen(process.env.PORT || 3001, () => console.log(`Listening to port ${process.env.PORT || 3001}`));
+      // render the error page
+      res.status(err.status || 500);
+      res.json({ error: err });
+    });
+  }
+}
