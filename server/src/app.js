@@ -9,6 +9,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import usersRouter from './routes/users';
+import eventRouter from './routes/event';
 import Authentication from './auth/authentication';
 
 mongoose.Promise = global.Promise;
@@ -59,6 +60,7 @@ export default class App {
     //   path.join(__dirname, '../../client/build')
     // );
     // expressApp.use('/*', staticFiles);
+    expressApp.use('/event', eventRouter);
     expressApp.use('/user', usersRouter);
 
     // catch 404 and forward to error handler

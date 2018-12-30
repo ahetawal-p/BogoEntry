@@ -17,6 +17,9 @@ const validate = values => {
   if (!values.city) {
     errors.city = 'Required';
   }
+  if (!values.zip) {
+    errors.zip = 'Required';
+  }
   if (!values.description) {
     errors.description = 'Required';
   }
@@ -44,7 +47,7 @@ const renderCommon = (
     {componentType === 'input' && (
       <input
         {...input}
-        pattern={type === 'tel' ? '[0-9]{3}-[0-9]{3}-[0-9]{4}' : undefined}
+        pattern={type === 'tel' ? '[0-9]{3}[0-9]{3}[0-9]{4}' : undefined}
         className={`form-control${touched && error ? ' is-invalid' : ''}`}
         placeholder={label}
         type={type}

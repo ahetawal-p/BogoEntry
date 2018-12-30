@@ -49,14 +49,6 @@ router.post('/login', async (req, res, next) => {
   })(req, res, next);
 });
 
-router.post(
-  '/protected',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const { user } = req;
-    console.log(user);
-    res.status(200).send({ user });
-  }
-);
+
 
 export default router;

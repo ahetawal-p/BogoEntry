@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import EventEntryForm from './EventEntryForm';
 import * as userActions from '../../actions/UserAction';
+import * as eventActions from '../../actions/EventAction';
 
 class EventEntryView extends Component {
   onCreateEvent = values => {
     console.log(values);
     const { dispatch } = this.props;
-    dispatch(userActions.register(values));
+    dispatch(eventActions.createEvent(values));
   };
 
   onLogout = () => {
