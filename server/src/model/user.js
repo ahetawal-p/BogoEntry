@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable comma-dangle */
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
@@ -39,6 +40,20 @@ UserSchema.methods.isValidPassword = async function isValidPassword(password) {
   const compare = await bcrypt.compare(password, user.password);
   return compare;
 };
+
+function handleE11000(error, res, next) {
+  console.error(error);
+  if (error.name === 'MongoError' && error.code === 11000) {
+    next(new Error('Account already exists'));
+  } else {
+    next();
+  }
+}
+
+UserSchema.post('save', handleE11000);
+UserSchema.post('update', handleE11000);
+UserSchema.post('findOneAndUpdate', handleE11000);
+UserSchema.post('insertMany', handleE11000);
 
 const UserModel = mongoose.model('user', UserSchema);
 
