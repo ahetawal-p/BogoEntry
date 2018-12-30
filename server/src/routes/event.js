@@ -44,4 +44,8 @@ router.post(
   }
 );
 
+router.get('/', passport.authenticate('jwt', { session: false }), (req, res) =>
+  res.status(200).send({ value: 2 })
+);
+
 export default router;

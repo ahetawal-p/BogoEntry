@@ -23,6 +23,20 @@ export function createEvent(values) {
   };
 }
 
+export function getEventCount() {
+  return dispatch => {
+    dispatch({ type: types.EVENT_COUNT_REQUEST });
+    eventService.getEventCount().then(
+      eventCount => {
+        dispatch({ type: types.EVENT_COUNT_SUCCESS, eventCount });
+      },
+      error => {
+        dispatch({ type: types.EVENT_COUNT_FAILURE, error });
+      }
+    );
+  };
+}
+
 export function updateEvent(values) {
   return dispatch => {
     dispatch({ type: types.CREATE_UPDATE_REQUEST });

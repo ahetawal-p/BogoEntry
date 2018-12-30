@@ -11,6 +11,15 @@ export function createEvent(event) {
   return fetch('/event', requestOptions).then(helper.handleResponse);
 }
 
+export function getEventCount() {
+  const requestOptions = {
+    method: 'GET',
+    headers: authHeader()
+  };
+
+  return fetch('/event', requestOptions).then(helper.handleResponse);
+}
+
 export function updateEvent(event) {
   const requestOptions = {
     method: 'POST',
