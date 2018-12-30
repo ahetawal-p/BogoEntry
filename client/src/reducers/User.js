@@ -16,9 +16,9 @@ export default function reducer(state = initialState, action) {
     case type.REGISTER_REQUEST:
       return { registering: true };
     case type.REGISTER_SUCCESS:
-      return {};
+      return { registering: false };
     case type.REGISTER_FAILURE:
-      return {};
+      return { registering: false };
     default:
       return state;
   }

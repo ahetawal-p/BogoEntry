@@ -11,51 +11,37 @@ export function login(values) {
       user => {
         dispatch({ type: types.LOGIN_SUCCESS, user });
         history.push('/');
-        dispatch(alertActions.success('Registration successful'));
+        // dispatch(alertActions.success('Registration successful'));
       },
       error => {
         dispatch({ type: types.LOGIN_FAILURE, error });
+        dispatch(alertActions.error(error.toString()));
       }
     );
   };
 }
 
 export function logout() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const ticketCount = state.purchase.addedTickets.length;
-    dispatch({
-      type: types.LOGIN_REQUEST,
-      newTicket: {
-        id: ticketCount,
-        riderType: '',
-        riderTypeId: '',
-        ticketType: '',
-        ticketTypeId: '',
-        price: 0,
-        qtyValue: 0,
-        totalValue: 0
-      }
-    });
+  return dispatch => {
+    userService.logout();
+    dispatch({ type: types.LOGOUT });
+    history.push('/');
   };
 }
 
-export function register(user) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const ticketCount = state.purchase.addedTickets.length;
-    dispatch({
-      type: types.LOGIN_REQUEST,
-      newTicket: {
-        id: ticketCount,
-        riderType: '',
-        riderTypeId: '',
-        ticketType: '',
-        ticketTypeId: '',
-        price: 0,
-        qtyValue: 0,
-        totalValue: 0
+export function register(values) {
+  return dispatch => {
+    dispatch({ type: types.REGISTER_REQUEST });
+    userService.register(values).then(
+      user => {
+        dispatch({ type: types.REGISTER_SUCCESS, user });
+        history.push('/login');
+        dispatch(alertActions.success('Registration successful'));
+      },
+      error => {
+        dispatch({ type: types.REGISTER_FAILURE });
+        dispatch(alertActions.error(error.toString()));
       }
-    });
+    );
   };
 }

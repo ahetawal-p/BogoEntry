@@ -8,13 +8,10 @@ import jwt from 'jsonwebtoken';
 const router = express.Router();
 
 router.post(
-  '/signup',
+  '/register',
   passport.authenticate('signup', { session: false }),
   async (req, res) => {
-    res.json({
-      message: 'Signup successful',
-      user: req.user
-    });
+    res.json({ message: 'Registration successful', user: req.user });
   }
 );
 
@@ -37,12 +34,13 @@ router.post('/login', async (req, res, next) => {
         const body = {
           _id: user._id,
           email: user.email,
+          isAdmin: user.isAdmin,
           expiry: parseInt(expirationDate.getTime() / 1000, 10)
         };
         // Sign the JWT token and populate the payload with the user email and id
         const token = jwt.sign({ user: body }, 'top_secret');
         // Send back the token to the user
-        return res.json({ token });
+        return res.json({ token, isAdmin: user.isAdmin });
       });
     } catch (error) {
       return next(error);

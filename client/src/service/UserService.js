@@ -28,9 +28,20 @@ export function login(values) {
     body: JSON.stringify(values)
   };
 
-  return new Promise((resolve, reject) => {
-    resolve('success');
-  });
+  // return new Promise((resolve, reject) => {
+  //   resolve('success');
+  // });
+  return fetch('/user/login', requestOptions)
+    .then(handleResponse)
+    .then(user => {
+      // login successful if there's a jwt token in the response
+      if (user.token) {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+
+      return user;
+    });
 }
 
 export function register(user) {
@@ -40,5 +51,5 @@ export function register(user) {
     body: JSON.stringify(user)
   };
 
-  return fetch('test/users/register', requestOptions).then(handleResponse);
+  return fetch('/user/register', requestOptions).then(handleResponse);
 }
