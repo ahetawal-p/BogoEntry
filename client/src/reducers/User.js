@@ -6,9 +6,9 @@ const initialState = user ? { loggedIn: true, user } : {};
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case type.LOGIN_REQUEST:
-      return { loggingIn: true, user: action.user };
+      return { loggingIn: true };
     case type.LOGIN_SUCCESS:
-      return { loggedIn: true, user: action.user };
+      return { loggedIn: true, user: action.response.user };
     case type.LOGIN_FAILURE:
       return { loggedIn: false };
     case type.LOGOUT:

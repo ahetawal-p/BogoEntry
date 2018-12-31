@@ -65,7 +65,7 @@ export default class Authentication {
       // Pass the user details to the next middleware
       const { user } = token;
       if (user.expiry > Date.now()) {
-        return done('Token Expired');
+        return done(null, false, { message: 'Token Expired' });
       }
       return done(null, token.user);
     } catch (error) {

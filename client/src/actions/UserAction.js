@@ -7,42 +7,44 @@ import { history } from '../helpers';
 
 export function login(values) {
   return dispatch => {
-    dispatch({ type: types.LOGIN_REQUEST });
-    userService.login(values).then(
-      user => {
-        dispatch({ type: types.LOGIN_SUCCESS, user });
+    dispatch({
+      types: [types.LOGIN_REQUEST, types.LOGIN_SUCCESS, types.LOGIN_FAILURE],
+      callAPI: userService.login(values)
+    })
+      .then(() => {
         history.push('/');
         dispatch(eventActions.getEventCount());
-      },
-      error => {
-        dispatch({ type: types.LOGIN_FAILURE, error });
-        dispatch(alertActions.error(error.toString()));
-      }
-    );
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 }
 
 export function logout() {
   return dispatch => {
     userService.logout();
-    dispatch({ type: types.LOGOUT });
     history.push('/');
+    dispatch({ type: types.LOGOUT });
   };
 }
 
 export function register(values) {
   return dispatch => {
-    dispatch({ type: types.REGISTER_REQUEST });
-    userService.register(values).then(
-      user => {
-        dispatch({ type: types.REGISTER_SUCCESS, user });
+    dispatch({
+      types: [
+        types.REGISTER_REQUEST,
+        types.REGISTER_SUCCESS,
+        types.REGISTER_FAILURE
+      ],
+      callAPI: userService.register(values)
+    })
+      .then(() => {
         history.push('/login');
         dispatch(alertActions.success('Registration successful'));
-      },
-      error => {
-        dispatch({ type: types.REGISTER_FAILURE });
-        dispatch(alertActions.error(error.toString()));
-      }
-    );
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 }

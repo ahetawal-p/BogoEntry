@@ -2,45 +2,41 @@ import { reset } from 'redux-form';
 import * as types from './EventTypes';
 import * as eventService from '../service/EventService';
 import * as alertActions from './AlertAction';
-
 import { history } from '../helpers';
 
 export function createEvent(values) {
   return dispatch => {
-    dispatch({ type: types.CREATE_UPDATE_REQUEST });
-    eventService.createEvent(values).then(
-      event => {
-        const { eventCount } = event;
-        dispatch({ type: types.CREATE_UPDATE_SUCCESS, event });
+    dispatch({
+      types: [
+        types.CREATE_UPDATE_REQUEST,
+        types.CREATE_UPDATE_SUCCESS,
+        types.CREATE_UPDATE_FAILURE
+      ],
+      callAPI: eventService.createEvent(values)
+    })
+      .then(() => {
         history.push('/');
         dispatch(reset('event'));
         dispatch(alertActions.success('Event created successfully'));
-        dispatch({ type: types.EVENT_COUNT_SUCCESS, eventCount });
-      },
-      error => {
-        dispatch({ type: types.CREATE_UPDATE_FAILURE, error });
-        dispatch(alertActions.error(error.toString()));
-      }
-    );
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 }
 
 export function getEventCount() {
-  return (dispatch, getState) => {
-    const state = getState();
-    if (state.user.loggedIn) {
-      dispatch({ type: types.EVENT_COUNT_REQUEST });
-      eventService.getEventCount().then(
-        response => {
-          const { eventCount } = response;
-          dispatch({ type: types.EVENT_COUNT_SUCCESS, eventCount });
-        },
-        error => {
-          dispatch({ type: types.EVENT_COUNT_FAILURE, error });
-          dispatch(alertActions.error(error.toString()));
-        }
-      );
-    }
+  return dispatch => {
+    dispatch({
+      types: [
+        types.EVENT_COUNT_REQUEST,
+        types.EVENT_COUNT_SUCCESS,
+        types.EVENT_COUNT_FAILURE
+      ],
+      callAPI: eventService.getEventCount()
+    }).catch(error => {
+      console.error(error);
+    });
   };
 }
 

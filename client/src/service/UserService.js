@@ -1,8 +1,7 @@
-import * as helper from '../utils/ServiceUtil';
+import handleResponse from '../utils/ServiceUtil';
 
 export function logout() {
-  // remove user from local storage to log user out
-  helper.logout();
+  localStorage.removeItem('user');
 }
 
 export function login(values) {
@@ -12,19 +11,16 @@ export function login(values) {
     body: JSON.stringify(values)
   };
 
-  // return new Promise((resolve, reject) => {
-  //   resolve('success');
-  // });
   return fetch('/user/login', requestOptions)
-    .then(helper.handleResponse)
-    .then(user => {
+    .then(handleResponse)
+    .then(response => {
       // login successful if there's a jwt token in the response
-      if (user.token) {
+      if (response.user && response.user.token) {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(response.user));
       }
 
-      return user;
+      return response;
     });
 }
 
@@ -35,5 +31,5 @@ export function register(user) {
     body: JSON.stringify(user)
   };
 
-  return fetch('/user/register', requestOptions).then(helper.handleResponse);
+  return fetch('/user/register', requestOptions).then(handleResponse);
 }

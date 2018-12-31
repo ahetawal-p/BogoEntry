@@ -1,4 +1,4 @@
-import * as helper from '../utils/ServiceUtil';
+import handleResponse from '../utils/ServiceUtil';
 import { authHeader } from '../helpers';
 
 export function createEvent(event) {
@@ -8,7 +8,7 @@ export function createEvent(event) {
     body: JSON.stringify(event)
   };
 
-  return fetch('/event', requestOptions).then(helper.handleResponse);
+  return fetch('/event', requestOptions).then(handleResponse);
 }
 
 export function getEventCount() {
@@ -17,7 +17,7 @@ export function getEventCount() {
     headers: authHeader()
   };
 
-  return fetch('/event', requestOptions).then(helper.handleResponse);
+  return fetch('/event', requestOptions).then(handleResponse);
 }
 
 export function updateEvent(event) {
@@ -27,5 +27,5 @@ export function updateEvent(event) {
     body: JSON.stringify(event)
   };
 
-  return fetch('/event/:id', requestOptions).then(helper.handleResponse);
+  return fetch('/event/:id', requestOptions).then(handleResponse);
 }
