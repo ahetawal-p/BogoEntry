@@ -1,6 +1,7 @@
 import * as types from './UserActionTypes';
 import * as userService from '../service/UserService';
 import * as alertActions from './AlertAction';
+import * as eventActions from './EventAction';
 
 import { history } from '../helpers';
 
@@ -11,7 +12,7 @@ export function login(values) {
       user => {
         dispatch({ type: types.LOGIN_SUCCESS, user });
         history.push('/');
-        // dispatch(alertActions.success('Registration successful'));
+        dispatch(eventActions.getEventCount());
       },
       error => {
         dispatch({ type: types.LOGIN_FAILURE, error });

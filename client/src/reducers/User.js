@@ -10,7 +10,7 @@ export default function reducer(state = initialState, action) {
     case type.LOGIN_SUCCESS:
       return { loggedIn: true, user: action.user };
     case type.LOGIN_FAILURE:
-      return {};
+      return { loggedIn: false };
     case type.LOGOUT:
       return {};
     case type.REGISTER_REQUEST:

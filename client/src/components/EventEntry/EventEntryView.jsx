@@ -15,7 +15,6 @@ class EventEntryView extends Component {
   }
 
   onCreateEvent = values => {
-    console.log(values);
     const { dispatch } = this.props;
     dispatch(eventActions.createEvent(values));
   };

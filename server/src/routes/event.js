@@ -21,13 +21,18 @@ router.post(
         activity,
         phone,
         email,
-        website
+        website,
+        otherCity
       } = req.body;
+      let finalCity = city;
+      if (city && city === 'other') {
+        finalCity = otherCity;
+      }
       const event = await EventModel.create({
         userEmail: req.user.email,
         title,
         state,
-        city,
+        city: finalCity,
         zip,
         address,
         description,
@@ -37,15 +42,29 @@ router.post(
         email,
         website
       });
-      return res.status(200).send({ event });
+      const eventCount = await EventModel.countDocuments({
+        userEmail: req.user.email
+      });
+      return res.status(200).send({ event, eventCount });
     } catch (error) {
       return next(error);
     }
   }
 );
 
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) =>
-  res.status(200).send({ value: 2 })
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    try {
+      const eventCount = await EventModel.countDocuments({
+        userEmail: req.user.email
+      });
+      return res.status(200).send({ eventCount });
+    } catch (error) {
+      return next(error);
+    }
+  }
 );
 
 export default router;

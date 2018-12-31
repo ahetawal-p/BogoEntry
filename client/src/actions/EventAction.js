@@ -10,10 +10,12 @@ export function createEvent(values) {
     dispatch({ type: types.CREATE_UPDATE_REQUEST });
     eventService.createEvent(values).then(
       event => {
+        const { eventCount } = event;
         dispatch({ type: types.CREATE_UPDATE_SUCCESS, event });
         history.push('/');
         dispatch(reset('event'));
         dispatch(alertActions.success('Event created successfully'));
+        dispatch({ type: types.EVENT_COUNT_SUCCESS, eventCount });
       },
       error => {
         dispatch({ type: types.CREATE_UPDATE_FAILURE, error });
@@ -24,16 +26,21 @@ export function createEvent(values) {
 }
 
 export function getEventCount() {
-  return dispatch => {
-    dispatch({ type: types.EVENT_COUNT_REQUEST });
-    eventService.getEventCount().then(
-      eventCount => {
-        dispatch({ type: types.EVENT_COUNT_SUCCESS, eventCount });
-      },
-      error => {
-        dispatch({ type: types.EVENT_COUNT_FAILURE, error });
-      }
-    );
+  return (dispatch, getState) => {
+    const state = getState();
+    if (state.user.loggedIn) {
+      dispatch({ type: types.EVENT_COUNT_REQUEST });
+      eventService.getEventCount().then(
+        response => {
+          const { eventCount } = response;
+          dispatch({ type: types.EVENT_COUNT_SUCCESS, eventCount });
+        },
+        error => {
+          dispatch({ type: types.EVENT_COUNT_FAILURE, error });
+          dispatch(alertActions.error(error.toString()));
+        }
+      );
+    }
   };
 }
 

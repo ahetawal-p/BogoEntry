@@ -23,6 +23,9 @@ const validate = values => {
   if (!values.description) {
     errors.description = 'Required';
   }
+  if (!values.activity) {
+    errors.activity = 'Required';
+  }
   if (!values.address) {
     errors.address = 'Required';
   }
