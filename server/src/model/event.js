@@ -1,5 +1,6 @@
 /* eslint-disable comma-dangle */
 import mongoose from 'mongoose';
+import MongoPaging from 'mongo-cursor-pagination';
 
 const { Schema } = mongoose;
 
@@ -22,7 +23,7 @@ const EventSchema = new Schema({
   website: { type: String },
   createdDate: { type: Date, default: Date.now }
 });
-
+EventSchema.plugin(MongoPaging.mongoosePlugin);
 const EventModel = mongoose.model('event', EventSchema);
 
 export default EventModel;

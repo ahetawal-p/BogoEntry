@@ -53,7 +53,7 @@ router.post(
 );
 
 router.get(
-  '/',
+  '/count',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {
@@ -63,6 +63,24 @@ router.get(
       return res.status(200).send({ eventCount });
     } catch (error) {
       return next(error);
+    }
+  }
+);
+
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, nextError) => {
+    try {
+      const { next, previous } = req.query;
+      let limit = 10;
+      if (req.query.limit) {
+        limit = parseInt(req.query.limit, 10);
+      }
+      const allEvents = await EventModel.paginate({ limit, next, previous });
+      return res.status(200).send({ allEvents });
+    } catch (error) {
+      return nextError(error);
     }
   }
 );

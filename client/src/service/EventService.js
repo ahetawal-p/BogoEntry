@@ -1,4 +1,4 @@
-import handleResponse from '../utils/ServiceUtil';
+import handleResponse, { objToQueryString } from '../utils/ServiceUtil';
 import { authHeader } from '../helpers';
 
 export function createEvent(event) {
@@ -17,7 +17,16 @@ export function getEventCount() {
     headers: authHeader()
   };
 
-  return fetch('/event', requestOptions).then(handleResponse);
+  return fetch('/event/count', requestOptions).then(handleResponse);
+}
+
+export function getAllEvents(paginateParams) {
+  const requestOptions = {
+    method: 'GET',
+    headers: authHeader()
+  };
+  const queryString = objToQueryString(paginateParams);
+  return fetch(`/event${queryString}`, requestOptions).then(handleResponse);
 }
 
 export function updateEvent(event) {

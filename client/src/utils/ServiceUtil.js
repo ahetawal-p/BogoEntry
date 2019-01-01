@@ -29,3 +29,16 @@ export default function handleResponse(response) {
     return data;
   });
 }
+
+export function objToQueryString(obj) {
+  if (!obj) {
+    return '';
+  }
+  const keyValuePairs = [];
+  Object.keys(obj).forEach(key => {
+    keyValuePairs.push(
+      `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`
+    );
+  });
+  return `?${keyValuePairs.join('&')}`;
+}

@@ -40,6 +40,21 @@ export function getEventCount() {
   };
 }
 
+export function getAllEvents(params) {
+  return dispatch => {
+    dispatch({
+      types: [
+        types.ALL_EVENTS_REQUEST,
+        types.ALL_EVENTS_SUCCESS,
+        types.ALL_EVENTS_FAILURE
+      ],
+      callAPI: eventService.getAllEvents(params)
+    }).catch(error => {
+      console.error(error);
+    });
+  };
+}
+
 export function updateEvent(values) {
   return dispatch => {
     dispatch({ type: types.CREATE_UPDATE_REQUEST });

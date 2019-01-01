@@ -3,7 +3,9 @@ import { LOGOUT } from '../actions/UserActionTypes';
 
 const initialState = {
   eventCount: 0,
-  creatingEvent: false
+  creatingEvent: false,
+  allEvents: {},
+  allEventsLoading: false
 };
 
 export default function reducer(state = initialState, action) {
@@ -24,6 +26,16 @@ export default function reducer(state = initialState, action) {
       return { ...state, eventCount: action.response.eventCount };
     case type.EVENT_COUNT_FAILURE:
       return initialState;
+    case type.ALL_EVENTS_REQUEST:
+      return { ...state, allEventsLoading: true };
+    case type.ALL_EVENTS_SUCCESS:
+      return {
+        ...state,
+        allEvents: action.response.allEvents,
+        allEventsLoading: false
+      };
+    case type.ALL_EVENTS_FAILURE:
+      return { ...state, allEventsLoading: false };
     case LOGOUT:
       return initialState;
     default:
