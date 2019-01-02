@@ -27,7 +27,7 @@ class EventEntryView extends Component {
   render() {
     const { loggingIn, user, eventCount } = this.props;
     return (
-      <div>
+      <div className="col-md-8">
         <div className="alert alert-info" role="alert">
           <div>Welcome {user.email}!</div>
           {eventCount > 0 && (

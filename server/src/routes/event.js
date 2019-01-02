@@ -77,7 +77,9 @@ router.get(
       if (req.query.limit) {
         limit = parseInt(req.query.limit, 10);
       }
+      const totalCount = await EventModel.countDocuments({});
       const allEvents = await EventModel.paginate({ limit, next, previous });
+      allEvents.totalCount = totalCount;
       return res.status(200).send({ allEvents });
     } catch (error) {
       return nextError(error);
