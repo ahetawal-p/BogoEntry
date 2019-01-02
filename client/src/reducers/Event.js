@@ -5,7 +5,8 @@ const initialState = {
   eventCount: 0,
   creatingEvent: false,
   allEvents: {},
-  allEventsLoading: false
+  allEventsLoading: false,
+  editEvent: undefined
 };
 
 export default function reducer(state = initialState, action) {
@@ -16,7 +17,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         creatingEvent: false,
-        eventCount: action.response.eventCount
+        eventCount: action.response.eventCount,
+        editEvent: undefined
       };
     case type.CREATE_UPDATE_FAILURE:
       return {};
@@ -36,6 +38,8 @@ export default function reducer(state = initialState, action) {
       };
     case type.ALL_EVENTS_FAILURE:
       return { ...state, allEventsLoading: false };
+    case type.EDIT_ADMIN_EVENT:
+      return { ...state, editEvent: action.editEvent };
     case LOGOUT:
       return initialState;
     default:

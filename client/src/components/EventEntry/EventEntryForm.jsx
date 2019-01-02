@@ -35,6 +35,7 @@ const validate = values => {
   return errors;
 };
 
+
 const renderCommon = (
   input,
   label,
@@ -126,7 +127,8 @@ let EventEntryForm = props => {
     submitting,
     stateValue,
     cityValue,
-    hasOtherCityName
+    hasOtherCityName,
+    change
   } = props;
   return (
     <form onSubmit={handleSubmit}>
@@ -149,7 +151,13 @@ let EventEntryForm = props => {
           </Field>
         </div>
         <div className="col-md-4">
-          <Field name="city" component={renderSelect} label="City" required>
+          <Field
+            name="city"
+            component={renderSelect}
+            label="City"
+            required
+            onChange={() => change('zip', '')}
+          >
             <option value="">Select a city...</option>
             {cityValue.map(cityOption => (
               <option value={cityOption} key={cityOption}>
@@ -238,7 +246,7 @@ let EventEntryForm = props => {
           <button
             className="btn btn-outline-primary"
             type="submit"
-            disabled={submitting}
+            disabled={pristine || submitting}
           >
             Submit
           </button>
@@ -261,6 +269,7 @@ let EventEntryForm = props => {
 EventEntryForm = reduxForm({
   form: 'event', // a unique identifier for this form
   validate // <--- validation function given to redux-form
+  
 })(EventEntryForm);
 
 // Decorate with connect to read form values
@@ -276,8 +285,19 @@ EventEntryForm = connect(state => {
   if (selector(state, 'city') === 'other') {
     hasOtherCityName = true;
   }
+  const returnObject = {
+    stateValue: Object.keys(STATE),
+    cityValue,
+    hasOtherCityName,
+    initialValues: state.event.editEvent
+  };
 
-  return { stateValue: Object.keys(STATE), cityValue, hasOtherCityName };
+  const { event } = state;
+  if (event && event.editEvent && event.editEvent.otherCity) {
+    returnObject.initialValues.city = 'other';
+    returnObject.hasOtherCityName = true;
+  }
+  return returnObject;
 })(EventEntryForm);
 
 export default EventEntryForm;

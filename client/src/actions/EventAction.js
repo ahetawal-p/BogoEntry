@@ -1,4 +1,4 @@
-import { reset } from 'redux-form';
+import { reset, clearFields } from 'redux-form';
 import * as types from './EventTypes';
 import * as eventService from '../service/EventService';
 import * as alertActions from './AlertAction';
@@ -52,6 +52,13 @@ export function getAllEvents(params) {
     }).catch(error => {
       console.error(error);
     });
+  };
+}
+
+export function adminEditEvent(editEvent) {
+  return dispatch => {
+    dispatch({ type: types.EDIT_ADMIN_EVENT, editEvent });
+    history.push('/');
   };
 }
 

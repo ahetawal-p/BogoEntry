@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -36,6 +37,11 @@ class AdminView extends Component {
         })
       );
     }
+  };
+
+  onSelectRow = rowInfo => {
+    const { dispatch } = this.props;
+    dispatch(eventActions.adminEditEvent(rowInfo.row._original));
   };
 
   getPaginateComponent = () => {
@@ -92,14 +98,8 @@ class AdminView extends Component {
                 textOverflow: 'unset'
               }
             })}
-            getTrProps={(state, rowInfo, column) => ({
-              onDoubleClick: e =>
-                console.log('Cell - onMouseEnter', {
-                  state,
-                  rowInfo,
-                  column,
-                  event: e
-                })
+            getTrProps={(state, rowInfo) => ({
+              onDoubleClick: () => this.onSelectRow(rowInfo)
             })}
             columns={[
               { Header: 'Title', accessor: 'title' },

@@ -22,8 +22,10 @@ router.post(
         phone,
         email,
         website,
-        otherCity
+        otherCity,
+        _id
       } = req.body;
+      console.log(_id);
       let finalCity = city;
       if (city && city === 'other') {
         finalCity = otherCity;
@@ -33,6 +35,7 @@ router.post(
         title,
         state,
         city: finalCity,
+        otherCity,
         zip,
         address,
         description,
