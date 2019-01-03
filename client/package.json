@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "citybogo-client",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:3001",
@@ -23,12 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
+  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"],
   "devDependencies": {
     "babel-eslint": "9.0.0",
     "eslint-config-airbnb": "^17.1.0",
