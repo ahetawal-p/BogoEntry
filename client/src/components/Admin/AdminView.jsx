@@ -8,6 +8,18 @@ import 'react-table/react-table.css';
 import * as eventActions from '../../actions/EventAction';
 
 const DEFAULT_LIMIT = 10;
+const getColumnWidth = (data, accessor, headerText) => {
+  if (data) {
+    const maxWidth = 400;
+    const magicSpacing = 10;
+    const cellLength = Math.max(
+      ...data.map(row => (`${row[accessor]}` || '').length),
+      headerText.length
+    );
+    return Math.min(maxWidth, cellLength * magicSpacing);
+  }
+  return 120;
+};
 
 class AdminView extends Component {
   fetchData = () => {
@@ -91,6 +103,7 @@ class AdminView extends Component {
         <h2>Admin Portal</h2>
         <div>
           <ReactTable
+            data={data}
             getTdProps={() => ({
               style: {
                 wordWrap: 'break-word',
@@ -102,7 +115,11 @@ class AdminView extends Component {
               onDoubleClick: () => this.onSelectRow(rowInfo)
             })}
             columns={[
-              { Header: 'Title', accessor: 'title' },
+              {
+                Header: 'Title',
+                accessor: 'title',
+                width: getColumnWidth(data, 'title', 'Title')
+              },
               { Header: 'Description', accessor: 'description', width: 200 },
               { Header: 'Activity', accessor: 'activity', width: 200 },
               { Header: 'State', accessor: 'state', width: 150 },
@@ -110,12 +127,25 @@ class AdminView extends Component {
               { Header: 'Zip', accessor: 'zip' },
               { Header: 'Address', accessor: 'address', width: 200 },
               { Header: 'Phone', accessor: 'phone', width: 120 },
-              { Header: 'Email', accessor: 'email', width: 120 },
-              { Header: 'Website', accessor: 'website', width: 140 },
+              {
+                Header: 'Email',
+                accessor: 'email',
+                width: getColumnWidth(data, 'email', 'Email')
+              },
+              {
+                Header: 'Website',
+                accessor: 'website',
+                width: getColumnWidth(data, 'website', 'Website'),
+                Cell: row => (
+                  <a href={row.value} target="_blank" rel="noopener noreferrer">
+                    {row.value}
+                  </a>
+                )
+              },
               {
                 Header: 'Last Update Date',
                 id: 'updateDate',
-                width: 140,
+                width: 145,
                 accessor: d => {
                   const date = new Date(d.updatedAt);
                   return date.toLocaleString();
@@ -123,7 +153,6 @@ class AdminView extends Component {
               }
             ]}
             manual
-            data={data}
             loading={allEventsLoading}
             onFetchData={this.fetchData}
             defaultPageSize={DEFAULT_LIMIT}
