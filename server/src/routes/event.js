@@ -28,16 +28,12 @@ router.post(
         otherCity,
         _id
       } = req.body;
-      let finalCity = city;
-      if (city && city === 'Other') {
-        finalCity = otherCity;
-      }
       const model = new EventModel({
         userEmail: req.user.email,
         title,
         state,
-        city: finalCity,
-        otherCity,
+        city: city && city === 'Other' ? otherCity : city,
+        otherCity: city && city !== 'Other' ? '' : otherCity,
         zip,
         address,
         description,

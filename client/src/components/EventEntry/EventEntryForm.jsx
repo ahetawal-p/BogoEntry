@@ -17,8 +17,14 @@ const validate = values => {
   if (!values.city) {
     errors.city = 'Required';
   }
-  if (!values.zip || isNaN(values.zip)) {
+  if (!values.zip) {
     errors.zip = 'Required';
+  }
+  if (
+    values.zip &&
+    (isNaN(values.zip) || !/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(values.zip))
+  ) {
+    errors.zip = 'Invalid code';
   }
   if (!values.description) {
     errors.description = 'Required';
