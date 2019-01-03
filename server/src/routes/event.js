@@ -30,7 +30,7 @@ router.post(
       } = req.body;
       console.log(_id);
       let finalCity = city;
-      if (city && city === 'other') {
+      if (city && city === 'Other') {
         finalCity = otherCity;
       }
       const model = new EventModel({

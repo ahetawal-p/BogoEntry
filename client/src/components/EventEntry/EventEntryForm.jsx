@@ -17,7 +17,7 @@ const validate = values => {
   if (!values.city) {
     errors.city = 'Required';
   }
-  if (!values.zip) {
+  if (!values.zip || isNaN(values.zip)) {
     errors.zip = 'Required';
   }
   if (!values.description) {
@@ -29,12 +29,11 @@ const validate = values => {
   if (!values.address) {
     errors.address = 'Required';
   }
-  if (values.city && values.city === 'other' && !values.otherCity) {
+  if (values.city && values.city === 'Other' && !values.otherCity) {
     errors.otherCity = 'Required';
   }
   return errors;
 };
-
 
 const renderCommon = (
   input,
@@ -269,7 +268,6 @@ let EventEntryForm = props => {
 EventEntryForm = reduxForm({
   form: 'event', // a unique identifier for this form
   validate // <--- validation function given to redux-form
-  
 })(EventEntryForm);
 
 // Decorate with connect to read form values
@@ -279,10 +277,10 @@ EventEntryForm = connect(state => {
   const stateValue = selector(state, 'state');
   let cityValue = [];
   if (stateValue) {
-    cityValue = [...STATE[stateValue], 'other'];
+    cityValue = [...STATE[stateValue], 'Other'];
   }
   let hasOtherCityName = false;
-  if (selector(state, 'city') === 'other') {
+  if (selector(state, 'city') === 'Other') {
     hasOtherCityName = true;
   }
   const returnObject = {
@@ -294,7 +292,7 @@ EventEntryForm = connect(state => {
 
   const { event } = state;
   if (event && event.editEvent && event.editEvent.otherCity) {
-    returnObject.initialValues.city = 'other';
+    returnObject.initialValues.city = 'Other';
     returnObject.hasOtherCityName = true;
   }
   return returnObject;
