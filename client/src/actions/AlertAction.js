@@ -11,3 +11,7 @@ export function error(message) {
 export function clear() {
   return { type: alertTypes.CLEAR };
 }
+
+export function info(message) {
+  return { type: alertTypes.INFO, message };
+}

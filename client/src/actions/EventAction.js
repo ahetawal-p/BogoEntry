@@ -1,4 +1,5 @@
-import { reset, clearFields } from 'redux-form';
+/* eslint-disable no-underscore-dangle */
+import { reset } from 'redux-form';
 import * as types from './EventTypes';
 import * as eventService from '../service/EventService';
 import * as alertActions from './AlertAction';
@@ -17,7 +18,11 @@ export function createEvent(values) {
       .then(() => {
         history.push('/');
         dispatch(reset('event'));
-        dispatch(alertActions.success('Event created successfully'));
+        if (values._id) {
+          dispatch(alertActions.info('Event upated !!'));
+        } else {
+          dispatch(alertActions.success('Event created successfully !'));
+        }
       })
       .catch(error => {
         console.error(error);

@@ -1,6 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable comma-dangle */
 import express from 'express';
 import passport from 'passport';
+import Mongoose from 'mongoose';
+
 import EventModel from '../model/event';
 
 const router = express.Router();
@@ -30,7 +33,7 @@ router.post(
       if (city && city === 'other') {
         finalCity = otherCity;
       }
-      const event = await EventModel.create({
+      const model = new EventModel({
         userEmail: req.user.email,
         title,
         state,
@@ -45,6 +48,14 @@ router.post(
         email,
         website
       });
+      const upsertData = model.toObject();
+      delete upsertData._id;
+
+      const event = await EventModel.findOneAndUpdate(
+        { _id: _id || Mongoose.Types.ObjectId() },
+        upsertData,
+        { upsert: true, new: true, runValidators: true }
+      );
       const eventCount = await EventModel.countDocuments({
         userEmail: req.user.email
       });
