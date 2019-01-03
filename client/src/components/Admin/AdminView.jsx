@@ -111,6 +111,7 @@ class AdminView extends Component {
               { Header: 'Address', accessor: 'address', width: 200 },
               { Header: 'Phone', accessor: 'phone', width: 120 },
               { Header: 'Email', accessor: 'email', width: 120 },
+              { Header: 'Website', accessor: 'website', width: 140 },
               {
                 Header: 'Last Update Date',
                 id: 'updateDate',
