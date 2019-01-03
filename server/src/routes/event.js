@@ -28,7 +28,6 @@ router.post(
         otherCity,
         _id
       } = req.body;
-      console.log(_id);
       let finalCity = city;
       if (city && city === 'Other') {
         finalCity = otherCity;

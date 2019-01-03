@@ -8,6 +8,9 @@ import { Strategy as JWTstrategy, ExtractJwt } from 'passport-jwt';
 
 import UserModel from '../model/user';
 
+const ADMIN_USER_EMAIL = process.env.ADMIN_USER_EMAIL || 'test@test.com';
+const ADMIN_USER_PASSWORD = process.env.ADMIN_USER_PASSWORD || 'test1234';
+
 export default class Authentication {
   constructor() {
     console.log('Authentication Initialization.');
@@ -17,12 +20,17 @@ export default class Authentication {
   async _signUpStrategy(request, email, password, done) {
     try {
       const { firstName, lastName } = request.body;
+      let isAdmin = false;
+      if (email === ADMIN_USER_EMAIL && password === ADMIN_USER_PASSWORD) {
+        isAdmin = true;
+      }
       // Save the information provided by the user to the the database
       const user = await UserModel.create({
         email,
         password,
         firstName,
-        lastName
+        lastName,
+        isAdmin
       });
       // Send the user information to the next middleware
       return done(null, user);

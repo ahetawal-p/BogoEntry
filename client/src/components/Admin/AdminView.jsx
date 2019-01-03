@@ -116,7 +116,7 @@ class AdminView extends Component {
                 id: 'updateDate',
                 width: 140,
                 accessor: d => {
-                  const date = new Date(d.updateDate);
+                  const date = new Date(d.updatedAt);
                   return date.toLocaleString();
                 }
               }
