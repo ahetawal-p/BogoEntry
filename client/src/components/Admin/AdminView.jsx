@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactTable from 'react-table';
+import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 
 import * as eventActions from '../../actions/EventAction';
@@ -100,7 +101,19 @@ class AdminView extends Component {
 
     return (
       <div>
-        <h2>Admin Portal</h2>
+        <div className="row">
+          <div className="col">
+            <h2>Admin Portal</h2>
+          </div>
+          <div className="col">
+            <div className="float-right">
+              <Link to="/" className="btn btn-link">
+                Back
+              </Link>
+            </div>
+          </div>
+        </div>
+
         <div>
           <ReactTable
             data={data}
