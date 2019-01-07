@@ -56,10 +56,10 @@ export default class App {
 
   configureRoutes() {
     const expressApp = this.express;
-    // const staticFiles = express.static(
-    //   path.join(__dirname, '../../client/build')
-    // );
-    // expressApp.use('/*', staticFiles);
+    const staticFiles = express.static(
+       path.join(__dirname, '../../client/build')
+    );
+    expressApp.use('/*', staticFiles);
     expressApp.use('/event', eventRouter);
     expressApp.use('/user', usersRouter);
 
