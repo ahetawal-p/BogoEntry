@@ -8,18 +8,19 @@
       "type": "node",
       "request": "attach",
       "name": "Attach by Process ID",
-      "processId": "${command:PickProcess}"
+      "processId": "${command:PickProcess}",
+      "sourceMaps": true
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Launch DEV",
-      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
+      "runtimeExecutable": "${workspaceFolder}/server/node_modules/.bin/nodemon",
       "restart": true,
       "args": [
         "${workspaceFolder}/server/src/index.js",
         "--exec",
-        "babel-node"
+        "${workspaceFolder}/server/node_modules/.bin/babel-node"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
