@@ -56,13 +56,13 @@ export default class App {
 
   configureRoutes() {
     const expressApp = this.express;
+    
+    expressApp.use('/event', eventRouter);
+    expressApp.use('/user', usersRouter);
     const staticFiles = express.static(
        path.join(__dirname, '../../client/build')
     );
     expressApp.use('/*', staticFiles);
-    expressApp.use('/event', eventRouter);
-    expressApp.use('/user', usersRouter);
-
     // catch 404 and forward to error handler
     expressApp.use((req, res, next) => {
       next(createError(404));
